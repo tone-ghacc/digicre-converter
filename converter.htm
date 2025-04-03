@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>特定文字入力（ボタン式）</title>
+        <style>
+            body {
+                max-width: 600px;
+                margin: 20px auto;
+                font-family: sans-serif;
+            }
+            h1 {
+                margin-bottom: 10px;
+            }
+            .button-container {
+                margin-bottom: 15px;
+            }
+            .button-container button {
+                margin: 4px;
+                padding: 8px 12px;
+                font-size: 14px;
+                cursor: pointer;
+            }
+            label {
+                display: block;
+                margin: 10px 0 5px;
+            }
+            input,
+            textarea {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 8px;
+                font-size: 16px;
+                margin-bottom: 10px;
+            }
+            #rawInput,
+            #convertedOutput {
+                background-color: #fafafa;
+            }
+            .note {
+                font-size: 14px;
+                color: #666;
+            }
+            #clearBtn {
+                margin-top: 5px;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>特定文字入力（ボタン式）</h1>
+        <p>下のボタンを押して文字を入力し、リアルタイムで変換結果を表示します。</p>
+        <p class="note">
+            入力できる文字：<br />
+            ア, ダ, デ, ゲ, ジ, ゴ, ハ, ケ, ン, リ, ル, サ, シ, タ, テ, ト, ゾ,<br />
+            ア゛, バ, ブ, ク, コ, ド, エ, フ, グ, ー, ニ, ニ゛, ソ, ヲ, ユ, ザ
+        </p>
+
+        <!-- ボタンリスト -->
+        <div class="button-container" id="buttonContainer">
+            <!-- JavaScriptで動的にボタンを生成します -->
+        </div>
+
+        <label for="rawInput">あなたの入力</label>
+        <input type="text" id="rawInput" readonly />
+
+        <label for="convertedOutput">変換結果</label>
+        <textarea id="convertedOutput" rows="5" readonly></textarea>
+
+        <button id="clearBtn">クリア</button>
+
+        <script>
+            // 入力可能文字のリスト
+            const allowedChars = [
+                "ア",
+                "ダ",
+                "デ",
+                "ゲ",
+                "ジ",
+                "ゴ",
+                "ハ",
+                "ケ",
+                "ン",
+                "リ",
+                "ル",
+                "サ",
+                "シ",
+                "タ",
+                "テ",
+                "ト",
+                "ゾ",
+                "ア゛",
+                "バ",
+                "ブ",
+                "ク",
+                "コ",
+                "ド",
+                "エ",
+                "フ",
+                "グ",
+                "ー",
+                "ニ",
+                "ニ゛",
+                "ソ",
+                "ヲ",
+                "ユ",
+                "ザ",
+            ];
+
+            // 対応する変換マッピング
+            const charMap = {
+                ア: ":digicre_a:",
+                ダ: ":digicre_da:",
+                デ: ":digicre_di:",
+                ゲ: ":digicre_ge:",
+                ジ: ":digicre_gi:",
+                ゴ: ":digicre_go:",
+                ハ: ":digicre_ha:",
+                ケ: ":digicre_ke:",
+                ン: ":digicre_n:",
+                リ: ":digicre_re:",
+                ル: ":digicre_ru:",
+                サ: ":digicre_sa:",
+                シ: ":digicre_shi:",
+                タ: ":digicre_ta:",
+                テ: ":digicre_te:",
+                ト: ":digicre_to:",
+                ゾ: ":digicre_zo:",
+                "ア゛": ":digicre_aa:",
+                バ: ":digicre_ba:",
+                ブ: ":digicre_bu:",
+                ク: ":digicre_c:",
+                コ: ":digicre_co:",
+                ド: ":digicre_do:",
+                エ: ":digicre_e:",
+                フ: ":digicre_fu:",
+                グ: ":digicre_gu:",
+                ー: ":digicre_long_dash:",
+                ニ: ":digicre_ni:",
+                "ニ゛": ":digicre_nii:",
+                ソ: ":digicre_so:",
+                ヲ: ":digicre_wo:",
+                ユ: ":digicre_yu:",
+                ザ: ":digicre_za:",
+            };
+
+            const rawInput = document.getElementById("rawInput");
+            const convertedOutput = document.getElementById("convertedOutput");
+            const buttonContainer = document.getElementById("buttonContainer");
+            const clearBtn = document.getElementById("clearBtn");
+
+            // ボタン生成
+            allowedChars.forEach((char) => {
+                const btn = document.createElement("button");
+                btn.textContent = char;
+                btn.addEventListener("click", () => {
+                    // ボタンを押したら、その文字を入力欄に追加
+                    rawInput.value += char;
+                    // リアルタイムで変換結果を更新
+                    updateConvertedText();
+                });
+                buttonContainer.appendChild(btn);
+            });
+
+            // 変換処理
+            function updateConvertedText() {
+                const text = rawInput.value;
+                let result = "";
+                for (const c of text) {
+                    // マッピングがあれば変換
+                    if (charMap[c]) {
+                        result += charMap[c];
+                    } else {
+                        // 念のためマッピングされていない文字はそのまま
+                        result += c;
+                    }
+                }
+                convertedOutput.value = result;
+            }
+
+            // クリアボタン
+            clearBtn.addEventListener("click", () => {
+                rawInput.value = "";
+                convertedOutput.value = "";
+            });
+        </script>
+    </body>
+</html>
